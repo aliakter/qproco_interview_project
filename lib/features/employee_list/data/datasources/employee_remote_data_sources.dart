@@ -14,6 +14,8 @@ class EmployeeRemoteDataSource implements EmployeeDataSource {
 
   @override
   Future<Either<AppException, EmployeeListModel>> employeeData(String page) async {
+    dioNetworkService.updateDioOptions();
+
     try {
       final result = await dioNetworkService.get('?results=$page');
       return result.fold(
