@@ -48,12 +48,6 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
           preferredSize: Size.fromHeight(60.h),
           child: CustomAppBar(
             elevation: 5,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            ),
             title: Text(
               HardCodedData.employees,
               style: AppTextStyle.bodyLarge.copyWith(
@@ -147,11 +141,13 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
                                               children: [
                                                 CustomInformation(
                                                   title: HardCodedData.name,
-                                                  subTitle: "${employeeData.name.title} ${employeeData.name.first} ${employeeData.name.last}",
+                                                  subTitle:
+                                                      "${employeeData.name.title} ${employeeData.name.first} ${employeeData.name.last}",
                                                 ),
                                                 CustomButtonInText(
                                                   color: AppColors.grey3,
-                                                  text: employeeData.location.country,
+                                                  text: employeeData
+                                                      .location.country,
                                                 ),
                                               ],
                                             ),

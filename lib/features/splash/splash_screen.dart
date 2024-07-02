@@ -26,6 +26,24 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     onTimeSee = StorageService.to.getString(STORAGE_USER_SEE_KEY);
+    startTime();
+  }
+
+  Future<void> startTime() async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (onTimeSee == "1") {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const EmployeeListScreen()),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const EmployeeScreen()),
+      );
+    }
   }
 
   @override
@@ -58,11 +76,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 foregroundColor: AppColors.green,
                 onPressed: () {
                   onTimeSee == "1"
-                      ? Navigator.push(
+                      ? Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const EmployeeListScreen(),
-                          ),
+                              builder: (context) => const EmployeeListScreen()),
+                          (Route<dynamic> route) => false,
                         )
                       : Navigator.push(
                           context,

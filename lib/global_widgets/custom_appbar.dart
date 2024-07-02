@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget {
     return AppBar(
       elevation: elevation,
       shadowColor: Colors.grey.shade100,
-      automaticallyImplyLeading: false,
+      // automaticallyImplyLeading: false,
       centerTitle: true,
       backgroundColor: AppColors.whiteColor,
       titleSpacing: titleSpacing,

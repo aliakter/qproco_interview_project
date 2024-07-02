@@ -151,10 +151,11 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                   } else if (state is AddEmployeeDoneState) {
                     Utils.toastMsg(
                         HardCodedData.employeeAddedSuccessfullyCompleted);
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const EmployeeListScreen()),
+                          builder: (context) => const EmployeeListScreen()),
+                      (Route<dynamic> route) => false,
                     );
                   }
                 },
