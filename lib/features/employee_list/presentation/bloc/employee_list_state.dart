@@ -27,7 +27,7 @@ class EmployeeDoneState extends EmployeeState {
 }
 
 class EmployeeErrorState extends EmployeeState {
-  const EmployeeErrorState({required DioError error}) : super(error: error);
+  const EmployeeErrorState({required DioException error}) : super(error: error);
 
   @override
   List<Object?> get props => [error];

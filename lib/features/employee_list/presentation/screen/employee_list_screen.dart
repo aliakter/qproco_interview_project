@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:qproco_interview_project/config/constant/app_colors.dart';
 import 'package:qproco_interview_project/config/constant/app_images.dart';
 import 'package:qproco_interview_project/config/constant/app_text_styles.dart';
@@ -13,7 +14,7 @@ import 'package:qproco_interview_project/global_widgets/custom_appbar.dart';
 import 'package:qproco_interview_project/global_widgets/custom_button_in_text.dart';
 import 'package:qproco_interview_project/global_widgets/custom_information.dart';
 import 'package:qproco_interview_project/global_widgets/custom_text.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:qproco_interview_project/shared/globals_settings.dart';
 
 class EmployeeListScreen extends StatefulWidget {
   const EmployeeListScreen({super.key});
@@ -28,6 +29,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   @override
   void initState() {
     super.initState();
+    IS_POST = "false";
     _employeeBloc = BlocProvider.of<EmployeeBloc>(context);
     _employeeBloc.add(const GetEmployee());
   }
@@ -221,5 +223,10 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

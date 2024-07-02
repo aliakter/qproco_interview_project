@@ -1,9 +1,11 @@
 import 'package:dartz/dartz.dart';
-import '../../domain/models/response.dart';
-import '../../exceptions/http_exception.dart';
+import 'package:qproco_interview_project/shared/domain/models/response.dart';
+import 'package:qproco_interview_project/shared/exceptions/http_exception.dart';
 
 abstract class NetworkService {
   String get baseUrl;
+
+  String get baseUrl2;
 
   Map<String, Object> get headers;
 

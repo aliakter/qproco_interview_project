@@ -1,26 +1,30 @@
 import 'package:dartz/dartz.dart';
 import 'package:qproco_interview_project/shared/data/remote/dio_network_service.dart';
-import 'package:qproco_interview_project/shared/domain/models/employee_list/employee_list_model.dart';
 import 'package:qproco_interview_project/shared/exceptions/http_exception.dart';
 
-abstract class EmployeeDataSource {
-  Future<Either<AppException, EmployeeListModel>> employeeData(String page);
+abstract class AddEmployeeDataSource {
+  Future<Either<AppException, String>> addEmployeeData(
+      Map<String, dynamic> data);
 }
 
-class EmployeeRemoteDataSource implements EmployeeDataSource {
+class AddEmployeeRemoteDataSource implements AddEmployeeDataSource {
   final DioNetworkService dioNetworkService;
 
-  EmployeeRemoteDataSource(this.dioNetworkService);
+  AddEmployeeRemoteDataSource(this.dioNetworkService);
 
   @override
-  Future<Either<AppException, EmployeeListModel>> employeeData(String page) async {
+  Future<Either<AppException, String>> addEmployeeData(
+      Map<String, dynamic> data) async {
+    dioNetworkService.updateDioOptions();
+
     try {
-      final result = await dioNetworkService.get('?results=$page');
+      final result = await dioNetworkService.post('users', data: data);
       return result.fold(
         (exception) => Left(exception),
         (response) async {
-          final user = EmployeeListModel.fromJson(response.data);
-          return Right(user);
+          final responseData = response.data as Map<String, dynamic>;
+          final message = responseData['createdAt'];
+          return Right(message);
         },
       );
     } catch (e) {

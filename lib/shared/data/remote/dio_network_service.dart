@@ -1,21 +1,19 @@
-import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:qproco_interview_project/config/app_configs.dart';
-import '../../domain/models/response.dart' as response;
-import '../../exceptions/http_exception.dart';
-import '../../globals_settings.dart';
-import '../../mixins/exception_handler_mixin.dart';
+import 'package:qproco_interview_project/shared/exceptions/http_exception.dart';
+import 'package:qproco_interview_project/shared/globals_settings.dart';
+import 'package:qproco_interview_project/shared/domain/models/response.dart' as response;
+import 'package:qproco_interview_project/shared/mixins/exception_handler_mixin.dart';
 import 'package:qproco_interview_project/shared/data/remote/network_service.dart';
 
 class DioNetworkService extends NetworkService with ExceptionHandlerMixin {
   final Dio dio;
 
   DioNetworkService(this.dio) {
-    // this throws error while running test
     if (!kTestMode) {
-      dio.options = dioBaseOptions;
+      updateDioOptions();
       if (kDebugMode) {
         dio.interceptors
             .add(LogInterceptor(requestBody: true, responseBody: true));
@@ -23,17 +21,24 @@ class DioNetworkService extends NetworkService with ExceptionHandlerMixin {
     }
   }
 
-  BaseOptions get dioBaseOptions =>
-      BaseOptions(baseUrl: baseUrl, headers: headers);
+  void updateDioOptions() {
+    dio.options = BaseOptions(
+      baseUrl: IS_POST == "true" ? baseUrl2 : baseUrl,
+      headers: headers,
+    );
+  }
 
   @override
   String get baseUrl => AppConfigs.appBaseUrl;
 
   @override
+  String get baseUrl2 => AppConfigs.appBaseUrl2;
+
+  @override
   Map<String, Object> get headers => {
-        'accept': 'application/json',
-        'content-type': 'application/json',
-      };
+    'accept': 'application/json',
+    'content-type': 'application/json',
+  };
 
   @override
   Map<String, dynamic>? updateHeader(Map<String, dynamic> data) {
@@ -47,10 +52,8 @@ class DioNetworkService extends NetworkService with ExceptionHandlerMixin {
   @override
   Future<Either<AppException, response.Response>> post(String endpoint,
       {Map<String, dynamic>? data}) async {
-    final res = await handleException(
-      () => dio.post(endpoint, data: data),
-      endpoint: endpoint,
-    );
+    final res = await handleException(() => dio.post(endpoint, data: data),
+        endpoint: endpoint);
     return res;
   }
 
@@ -58,34 +61,8 @@ class DioNetworkService extends NetworkService with ExceptionHandlerMixin {
   Future<Either<AppException, response.Response>> get(String endpoint,
       {Map<String, dynamic>? queryParameters}) {
     final res = handleException(
-      () => dio.get(endpoint, queryParameters: queryParameters),
-      endpoint: endpoint,
-    );
-    return res;
-  }
-
-  @override
-  Future<Either<AppException, response.Response>> multipartPost(
-      String endpoint, File file,
-      {Map<String, dynamic>? data}) async {
-    var formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(file.path, filename: "nid_of_user"),
-    });
-
-    final res = await handleException(
-      () => dio.post(endpoint, data: formData),
-      endpoint: endpoint,
-    );
-    return res;
-  }
-
-  @override
-  Future<Either<AppException, response.Response>> patch(String endpoint,
-      {Map<String, dynamic>? data}) async {
-    final res = await handleException(
-      () => dio.patch(endpoint, data: data),
-      endpoint: endpoint,
-    );
+            () => dio.get(endpoint, queryParameters: queryParameters),
+        endpoint: endpoint);
     return res;
   }
 }

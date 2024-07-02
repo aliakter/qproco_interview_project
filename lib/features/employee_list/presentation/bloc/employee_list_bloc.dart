@@ -27,8 +27,8 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
           emit(EmployeeErrorState(error: DioException(requestOptions: RequestOptions(path: ''), error: failure.message)));
           isLoading  = false;
         },
-        (employeeList) {
-          emit(EmployeeDoneState(employeeListModel: employeeList));
+        (data) {
+          emit(EmployeeDoneState(employeeListModel: data));
           isLoading  = false;
         },
       );

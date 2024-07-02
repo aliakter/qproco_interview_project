@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qproco_interview_project/config/constant/app_colors.dart';
 import 'package:qproco_interview_project/config/constant/app_text_styles.dart';
 import 'package:qproco_interview_project/config/constant/hard_coded_data.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:qproco_interview_project/core/utils/utils.dart';
+import 'package:qproco_interview_project/features/add_employee/presentation/bloc/add_employee_list_bloc.dart';
+import 'package:qproco_interview_project/features/add_employee/presentation/bloc/add_employee_list_event.dart';
+import 'package:qproco_interview_project/features/add_employee/presentation/bloc/add_employee_list_state.dart';
 import 'package:qproco_interview_project/features/employee_list/presentation/screen/employee_list_screen.dart';
 import 'package:qproco_interview_project/global_widgets/custom_appbar.dart';
 import 'package:qproco_interview_project/global_widgets/custom_button.dart';
 import 'package:qproco_interview_project/global_widgets/custom_text.dart';
 import 'package:qproco_interview_project/global_widgets/custom_textfield.dart';
+import 'package:qproco_interview_project/shared/globals_settings.dart';
 
 class AddEmployeeScreen extends StatefulWidget {
   const AddEmployeeScreen({super.key});
@@ -21,6 +27,14 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController numberController = TextEditingController();
   final TextEditingController roleController = TextEditingController();
+  late AddEmployeeBloc addEmployeeBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    IS_POST = "true";
+    addEmployeeBloc = BlocProvider.of<AddEmployeeBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,20 +110,49 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomButton(
-                height: 44.h,
-                width: double.infinity,
-                elevation: 0,
-                text: HardCodedData.next,
-                foregroundColor: AppColors.green,
-                backgroundColor: AppColors.blue,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const EmployeeListScreen(),
-                    ),
-                  );
+              BlocConsumer<AddEmployeeBloc, AddEmployeeState>(
+                listener: (context, state) {
+                  if (state is AddEmployeeLoadingState) {
+                    const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.blue,
+                      ),
+                    );
+                  } else if (state is AddEmployeeErrorState) {
+                    Utils.toastMsg("${state.error.message}");
+                  } else if (state is AddEmployeeDoneState) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const EmployeeListScreen()),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return addEmployeeBloc.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.blue,
+                          ),
+                        )
+                      : CustomButton(
+                          height: 44.h,
+                          width: double.infinity,
+                          elevation: 0,
+                          text: HardCodedData.next,
+                          foregroundColor: AppColors.green,
+                          backgroundColor: AppColors.blue,
+                          onPressed: () {
+                            context.read<AddEmployeeBloc>().add(
+                                  PostAddEmployee(
+                                    name: nameController.text,
+                                    email: emailController.text,
+                                    phoneNumber: numberController.text,
+                                    role: roleController.text,
+                                  ),
+                                );
+                          },
+                        );
                 },
               ),
             ],
@@ -117,5 +160,14 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.clear();
+    emailController.clear();
+    numberController.clear();
+    roleController.clear();
   }
 }
