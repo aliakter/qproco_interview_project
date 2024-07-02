@@ -36,6 +36,34 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     addEmployeeBloc = BlocProvider.of<AddEmployeeBloc>(context);
   }
 
+  bool isNameOkay() {
+    if (nameController.text.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isEmailOkay() {
+    if (emailController.text.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isNumberOkay() {
+    if (numberController.text.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isRoleOkay() {
+    if (roleController.text.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -121,6 +149,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                   } else if (state is AddEmployeeErrorState) {
                     Utils.toastMsg("${state.error.message}");
                   } else if (state is AddEmployeeDoneState) {
+                    Utils.toastMsg(
+                        HardCodedData.employeeAddedSuccessfullyCompleted);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -143,14 +173,28 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           foregroundColor: AppColors.green,
                           backgroundColor: AppColors.blue,
                           onPressed: () {
-                            context.read<AddEmployeeBloc>().add(
-                                  PostAddEmployee(
-                                    name: nameController.text,
-                                    email: emailController.text,
-                                    phoneNumber: numberController.text,
-                                    role: roleController.text,
-                                  ),
-                                );
+                            if (isNameOkay() &&
+                                isEmailOkay() &&
+                                isNumberOkay() &&
+                                isRoleOkay()) {
+                              context.read<AddEmployeeBloc>().add(
+                                    PostAddEmployee(
+                                      name: nameController.text,
+                                      email: emailController.text,
+                                      phoneNumber: numberController.text,
+                                      role: roleController.text,
+                                    ),
+                                  );
+                            } else if (!isNameOkay()) {
+                              Utils.toastMsg(HardCodedData.nameCannotBeEmpty);
+                            } else if (!isEmailOkay()) {
+                              Utils.toastMsg(HardCodedData.emailCannotBeEmpty);
+                            } else if (!isNumberOkay()) {
+                              Utils.toastMsg(
+                                  HardCodedData.phoneNumberCannotBeEmpty);
+                            } else if (!isRoleOkay()) {
+                              Utils.toastMsg(HardCodedData.roleCannotBeEmpty);
+                            }
                           },
                         );
                 },

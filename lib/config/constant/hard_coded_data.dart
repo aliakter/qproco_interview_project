@@ -16,4 +16,9 @@ class HardCodedData {
   static const String phone = "Phone";
   static const String edit = "Edit";
   static const String noDataFound = "No Data Found";
+  static const String nameCannotBeEmpty = "Name cannot be empty";
+  static const String emailCannotBeEmpty = "Email cannot be empty";
+  static const String phoneNumberCannotBeEmpty = "Phone number cannot be empty";
+  static const String roleCannotBeEmpty = "Role cannot be empty";
+  static const String employeeAddedSuccessfullyCompleted = "Employee Added Successfully Completed";
 }
