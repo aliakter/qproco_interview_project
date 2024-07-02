@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> startTime() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 3));
 
     if (onTimeSee == "1") {
       Navigator.pushAndRemoveUntil(

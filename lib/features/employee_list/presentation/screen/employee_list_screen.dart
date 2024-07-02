@@ -35,6 +35,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   }
 
   Future<void> refreshEmployees() async {
+    IS_POST = "false";
     _employeeBloc.add(const GetEmployee());
     await Future.delayed(const Duration(milliseconds: 500));
   }
@@ -58,6 +59,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             actions: [
               IconButton(
                 onPressed: () {
+                  IS_POST = "false";
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -219,10 +221,5 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
